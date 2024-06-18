@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { User } from '../users/entities/user.entity';
 
 @Controller('projects')
 export class ProjectsController {
@@ -30,5 +40,13 @@ export class ProjectsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.projectsService.remove(+id);
+  }
+
+  // Getting all the users under a project
+  @Get(':id/users')
+  async findUsersByProjectId(
+    @Param('id', ParseIntPipe) projectId: number,
+  ): Promise<User[]> {
+    return this.projectsService.findUsersByProjectId(projectId);
   }
 }
